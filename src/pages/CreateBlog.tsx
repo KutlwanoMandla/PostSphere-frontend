@@ -65,7 +65,7 @@ const CreateBlog = () => {
     };
 
     // console.log(localStorage.getItem("user"))
-    let username;
+    // let username;
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -78,7 +78,7 @@ const CreateBlog = () => {
             if (userString != null) {
                 const user = JSON.parse(userString);
                 userId = user.id;
-                username = user.username;
+                // username = user.username;
             } else {
                 console.warn("No user data found in localStorage.");
             }
