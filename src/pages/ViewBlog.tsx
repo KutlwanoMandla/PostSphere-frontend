@@ -74,20 +74,28 @@ const ViewBlog = () => {
             const formData = new FormData();
             formData.append('username', user?.username || 'Anonymous');
             formData.append('content', newComment);
-
-            const response = await api.post<Comment>(
-                `/posts/${postId}/comments`,
-                formData
+    
+            const response = await fetch(
+                `https://postsphere-backend-1.onrender.com/api/posts/${postId}/comments`, 
+                {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                }
             );
-
-            setComments((prev) => [...prev, response.data]);
+    
+            if (!response.ok) {
+                throw new Error('Failed to add comment');
+            }
+    
+            const data = await response.json();
+            setComments(prev => [...prev, data]);
             setNewComment('');
         } catch (error) {
             console.error('Error adding comment:', error);
-
-            if (axios.isAxiosError(error)) {
-                alert(error.response?.data || 'Failed to add comment');
-            }
+        alert('Failed to add comment');
         }
     };
 
@@ -121,21 +129,29 @@ const ViewBlog = () => {
 
         try {
             const formData = new FormData();
-            formData.append('username', user.username);
+        formData.append('username', user.username);
 
-            const response = await api.post(
-                `/posts/${postId}/likes`,
-                formData
-            );
-            console.log(response);
-            setIsLiked(prev => !prev);
-            setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+        const response = await fetch(
+            `https://postsphere-backend-1.onrender.com/api/posts/${postId}/likes`,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error('Failed to update like status');
+        }
+
+        setIsLiked(prev => !prev);
+        setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
         } catch (error) {
             console.error('Error toggling like:', error);
 
-            if (axios.isAxiosError(error)) {
-                alert(error.response?.data || 'Failed to update like status');
-            }
+            alert('Failed to update like status');
 
         }
     };
