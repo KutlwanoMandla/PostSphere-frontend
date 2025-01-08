@@ -71,17 +71,23 @@ const ViewBlog = () => {
         if (newComment.trim() === '') return;
 
         try {
+            const formData = new FormData();
+            formData.append('username', user?.username || 'Anonymous');
+            formData.append('content', newComment);
+
             const response = await api.post<Comment>(
                 `/posts/${postId}/comments`,
-                new URLSearchParams({
-                    username: user?.username || 'Anonymous',
-                    content: newComment,
-                })
+                formData
             );
+
             setComments((prev) => [...prev, response.data]);
             setNewComment('');
         } catch (error) {
             console.error('Error adding comment:', error);
+
+            if (axios.isAxiosError(error)) {
+                alert(error.response?.data || 'Failed to add comment');
+            }
         }
     };
 
@@ -114,16 +120,23 @@ const ViewBlog = () => {
         }
 
         try {
-            await api.post(`/posts/${postId}/likes`,
-                new URLSearchParams({
-                    username: user.username
-                })
+            const formData = new FormData();
+            formData.append('username', user.username);
+
+            const response = await api.post(
+                `/posts/${postId}/likes`,
+                formData
             );
+            console.log(response);
             setIsLiked(prev => !prev);
             setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
         } catch (error) {
             console.error('Error toggling like:', error);
-            alert('Failed to update like status');
+
+            if (axios.isAxiosError(error)) {
+                alert(error.response?.data || 'Failed to update like status');
+            }
+
         }
     };
 
@@ -189,7 +202,7 @@ const ViewBlog = () => {
 
             {/* Enhanced Main Content */}
             <main className="max-w-7xl mx-auto px-4 py-8">
-                <button 
+                <button
                     onClick={() => navigate(-1)}
                     className="mb-6 flex items-center text-gray-600 hover:text-gray-900 transition-colors group"
                     aria-label="Go back"
@@ -231,7 +244,7 @@ const ViewBlog = () => {
 
                             {/* Title and Content */}
                             <h1 className="text-4xl font-bold mb-6" tabIndex={0}>{article.title}</h1>
-                            <div 
+                            <div
                                 className="text-xl text-gray-700 mb-8 font-serif leading-relaxed border-l-4 border-blue-500 pl-6"
                                 tabIndex={0}
                             >
@@ -247,9 +260,8 @@ const ViewBlog = () => {
                             <div className="flex items-center gap-4 mb-12">
                                 <button
                                     onClick={handleLikeToggle}
-                                    className={`flex items-center px-6 py-3 ${
-                                        isLiked ? 'bg-blue-600' : 'bg-blue-500'
-                                    } text-white rounded-lg hover:bg-blue-600 transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
+                                    className={`flex items-center px-6 py-3 ${isLiked ? 'bg-blue-600' : 'bg-blue-500'
+                                        } text-white rounded-lg hover:bg-blue-600 transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
                                     aria-label={isLiked ? 'Unlike this article' : 'Like this article'}
                                 >
                                     <ThumbsUp className={`w-5 h-5 mr-2 ${isLiked ? 'fill-current' : ''}`} />
@@ -280,7 +292,7 @@ const ViewBlog = () => {
                                             Post Comment
                                         </button>
                                     </div>
-                                    
+
                                     {comments.map((comment) => (
                                         <div
                                             key={comment.id}
@@ -301,7 +313,7 @@ const ViewBlog = () => {
                                                     </div>
                                                 </div>
                                                 <div className="relative">
-                                                    <button 
+                                                    <button
                                                         onClick={() => setMenuOpen({ [comment.id]: !menuOpen[comment.id] })}
                                                         className="p-1 hover:bg-gray-100 rounded-full transition-colors"
                                                         aria-label="Comment options"
@@ -337,8 +349,8 @@ const ViewBlog = () => {
                             <div className="space-y-6">
                                 {relatedPosts.length > 0 ? (
                                     relatedPosts.map((relatedPost) => (
-                                        <div 
-                                            key={relatedPost.id} 
+                                        <div
+                                            key={relatedPost.id}
                                             className="group cursor-pointer"
                                             onClick={() => navigate(`/posts/${relatedPost.id}`)}
                                         >
