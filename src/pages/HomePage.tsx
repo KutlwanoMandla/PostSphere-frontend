@@ -285,7 +285,8 @@ const Home = () => {
                                                 <div className="md:flex-shrink-0">
                                                     <img
                                                         className="h-48 w-full md:w-48 object-cover rounded-t-lg md:rounded-l-lg md:rounded-t-none"
-                                                        src={`https://postsphere-backend-1.onrender.com${post.thumbnailUrl}`}
+                                                        // src={`https://postsphere-backend-1.onrender.com${post.thumbnailUrl}`}
+                                                        src={post.thumbnailUrl}
                                                         alt={post.title}
                                                     />
                                                 </div>

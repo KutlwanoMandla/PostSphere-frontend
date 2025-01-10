@@ -232,7 +232,8 @@ const ViewBlog = () => {
                         {/* Hero Image */}
                         <div className="relative aspect-video">
                             <img
-                                src={`https://postsphere-backend-1.onrender.com${article.thumbnailUrl}`}
+                                // src={`https://postsphere-backend-1.onrender.com${article.thumbnailUrl}`}
+                                src={article.thumbnailUrl}
                                 alt={article.title}
                                 className="w-full h-full object-cover"
                             />
@@ -372,7 +373,8 @@ const ViewBlog = () => {
                                         >
                                             <div className="relative aspect-video rounded-lg overflow-hidden mb-3">
                                                 <img
-                                                    src={`https://postsphere-backend-1.onrender.com${relatedPost.thumbnailUrl}`}
+                                                    // src={`https://postsphere-backend-1.onrender.com${relatedPost.thumbnailUrl}`}
+                                                    src={relatedPost.thumbnailUrl}
                                                     alt={relatedPost.title}
                                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                                 />
