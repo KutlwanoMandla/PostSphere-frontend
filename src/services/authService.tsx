@@ -57,4 +57,46 @@ interface SignupData {
       localStorage.setItem('token', authData.token);
       return authData;
     },
+    forgotPassword: async (email: string) => {
+      try {
+        const response = await fetch(`${API_URL}/forgot-password`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        });
+  
+        if (!response.ok) {
+          const error = await response.text();
+          throw new Error(error);
+        }
+  
+        const data = await response.text();
+        return data; // This will return the full response including the verification code
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async resetPassword(data: { email: string; verificationCode: string; newPassword: string }): Promise<string> {
+      const response = await fetch(`${API_URL}/reset-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: data.email,
+          verificationCode: data.verificationCode,
+          newPassword: data.newPassword
+        })
+      });
+    
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage);
+      }
+    
+      return response.text();
+    }
   };
