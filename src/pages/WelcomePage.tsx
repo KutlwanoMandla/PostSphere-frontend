@@ -19,6 +19,7 @@ export default function WelcomePage() {
 
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState<string | null>(null);
+  console.log(verificationCode)
 
 
   // Login form state

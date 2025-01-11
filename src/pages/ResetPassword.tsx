@@ -74,6 +74,7 @@ export default function ResetPassword() {
         verificationCode: formData.code,
         newPassword: formData.newPassword
       });
+      console.log(response)
       
       toast.success('Password reset successful!');
       
